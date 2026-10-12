@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Loại khóa học')}"></head>
+<body>
+<nav th:replace="~{fragments :: nav}"></nav>
+<div class="container">
+    <div class="page-head">
+        <h1>Loại khóa học</h1>
+        <a class="btn" th:href="@{/categories/create}">+ Thêm loại khóa học</a>
+    </div>
+
+    <div th:replace="~{fragments :: flash}"></div>
+
+    <div class="card">
+        <table th:if="${!categories.isEmpty()}">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Tên loại</th>
+                <th>Mô tả</th>
+                <th class="num">Số khóa học</th>
+                <th>Thao tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c, st : ${categories}">
+                <td th:text="${st.count}">1</td>
+                <td><a th:href="@{/courses(categoryId=${c.id})}" th:text="${c.name}">Tên</a></td>
+                <td th:text="${c.description}">Mô tả</td>
+                <td class="num" th:text="${courseCounts.get(c.id)}">0</td>
+                <td>
+                    <div class="actions">
+                        <a class="btn btn-secondary btn-sm" th:href="@{/categories/{id}/edit(id=${c.id})}">Sửa</a>
+                        <form class="inline" method="post" th:action="@{/categories/{id}/delete(id=${c.id})}"
+                              onsubmit="return confirm('Xóa loại khóa học này?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="empty" th:if="${categories.isEmpty()}">Chưa có loại khóa học nào.</div>
+    </div>
+</div>
+</body>
+</html>

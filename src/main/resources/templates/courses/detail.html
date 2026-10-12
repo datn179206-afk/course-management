@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head(${course.name})}"></head>
+<body>
+<nav th:replace="~{fragments :: nav}"></nav>
+<div class="container">
+    <div class="page-head">
+        <h1 th:text="${course.name}">Tên khóa học</h1>
+        <div class="actions">
+            <a class="btn btn-secondary" th:href="@{/courses}">← Danh sách</a>
+            <a class="btn" th:href="@{/courses/{id}/edit(id=${course.id})}">Sửa</a>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments :: flash}"></div>
+
+    <div class="card">
+        <h2>Thông tin khóa học</h2>
+        <dl class="meta">
+            <dt>Loại khóa học</dt>
+            <dd th:text="${course.category.name}">Loại</dd>
+            <dt>Học phí</dt>
+            <dd th:text="${#numbers.formatDecimal(course.tuitionFee, 0, 'POINT', 0, 'COMMA')} + ' ₫'">0</dd>
+            <dt>Thời lượng</dt>
+            <dd>
+                <span th:text="${course.duration} + ' giờ'">0</span>
+                <span class="badge" th:classappend="${course.durationType == 'Ngắn hạn'} ? 'badge-short' : 'badge-long'"
+                      th:text="${course.durationType}">Ngắn hạn</span>
+            </dd>
+            <dt>Trạng thái</dt>
+            <dd>
+                <span class="badge" th:classappend="${course.active} ? 'badge-active' : 'badge-inactive'"
+                      th:text="${course.statusText}">Đang tuyển sinh</span>
+            </dd>
+            <dt>Mô tả</dt>
+            <dd th:text="${course.description != null and !course.description.isBlank()} ? ${course.description} : '(Chưa có mô tả)'">Mô tả</dd>
+        </dl>
+    </div>
+
+    <div class="card">
+        <h2>Ảnh khóa học (<span th:text="${course.images.size()}">0</span>)</h2>
+
+        <div class="alert alert-info" th:if="${course.images.isEmpty()}">
+            Khóa học này chưa có ảnh. Hãy thêm ảnh bằng đường dẫn URL ở bên dưới.
+        </div>
+
+        <div class="gallery" th:if="${!course.images.isEmpty()}">
+            <div class="gallery-item" th:each="img : ${course.images}" th:classappend="${img.thumbnail} ? 'is-thumb'">
+                <img th:src="${img.imageUrl}" th:alt="${course.name}" onerror="this.style.opacity='0.2'">
+                <div class="body">
+                    <div class="url" th:text="${img.imageUrl}">url</div>
+                    <div>
+                        <span class="badge badge-thumb" th:if="${img.thumbnail}">★ Ảnh đại diện</span>
+                    </div>
+                    <div class="actions">
+                        <form class="inline" method="post"
+                              th:action="@{/courses/{id}/images/{imageId}/thumbnail(id=${course.id}, imageId=${img.id})}"
+                              th:if="${!img.thumbnail}">
+                            <button type="submit" class="btn btn-secondary btn-sm">Đặt làm ảnh đại diện</button>
+                        </form>
+                        <form class="inline" method="post"
+                              th:action="@{/courses/{id}/images/{imageId}/delete(id=${course.id}, imageId=${img.id})}"
+                              onsubmit="return confirm('Xóa ảnh này?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--border);margin:20px 0">
+        <h2>Thêm ảnh</h2>
+        <form method="post" th:action="@{/courses/{id}/images(id=${course.id})}">
+            <div class="field">
+                <label for="imageUrl">Đường dẫn ảnh (URL)</label>
+                <input type="text" id="imageUrl" name="imageUrl" placeholder="https://example.com/anh.jpg">
+            </div>
+            <div class="field checkbox">
+                <input type="checkbox" id="thumbnail" name="thumbnail" value="true">
+                <label for="thumbnail">Đặt làm ảnh đại diện</label>
+            </div>
+            <button type="submit" class="btn">Thêm ảnh</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

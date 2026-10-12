@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${title} + ' - Quản lý khóa học'">Quản lý khóa học</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav class="navbar" th:fragment="nav">
+    <span class="brand">Quản lý khóa học</span>
+    <a th:href="@{/courses}">Khóa học</a>
+    <a th:href="@{/categories}">Loại khóa học</a>
+</nav>
+
+<div th:fragment="flash">
+    <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
+    <div class="alert alert-error" th:if="${error}" th:text="${error}"></div>
+</div>
+</body>
+</html>

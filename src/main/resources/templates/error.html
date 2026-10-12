@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Lỗi')}"></head>
+<body>
+<nav th:replace="~{fragments :: nav}"></nav>
+<div class="container">
+    <div class="card error-page">
+        <p class="code" th:text="${status}">404</p>
+        <h1>Không thể hiển thị trang</h1>
+        <p>Trang bạn truy cập không tồn tại hoặc đã xảy ra sự cố. Vui lòng thử lại.</p>
+        <a class="btn" th:href="@{/courses}">Về danh sách khóa học</a>
+    </div>
+</div>
+</body>
+</html>
